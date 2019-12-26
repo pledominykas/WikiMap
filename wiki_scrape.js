@@ -2,12 +2,9 @@
 const request = require('request');
 const cheerio = require('cheerio');
 
-GetWikiHtml('https://en.wikipedia.org/wiki/Kaunas_University_of_Technology', true, function(html){
-  GetValidWikiHyperlinks(html);
-});
-
 
 //// TODO: Add error handling
+// Gets the html of a wikipedia article
 function GetWikiHtml(url, onlyFirstParagraph, callback){
   request(url, function(err, res, html){
     if(!err && res.statusCode == 200){
@@ -37,7 +34,6 @@ function GetValidWikiHyperlinks(html){
     let link = hyperlinks[i].attribs.href;
     if(link != undefined && IsWikiArticle(link) && !filtered.includes(link)) {
       filtered.push(link);
-      console.log(link);
     }
   }
   return filtered;
@@ -46,4 +42,11 @@ function GetValidWikiHyperlinks(html){
 // Checks if the specified link is a valid wikipedia article
 function IsWikiArticle(link) {
   return link.startsWith('/wiki/') && !link.includes(':');
+}
+
+// Module exports
+module.exports = function(url, onlyFirstParagraph, callback){
+  GetWikiHtml(url, onlyFirstParagraph, function(html){
+    callback(GetValidWikiHyperlinks(html));
+  });
 }
