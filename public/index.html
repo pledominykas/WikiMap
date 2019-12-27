@@ -3,11 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title>Wiki Map</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/style/graph.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
   <body>
-    <div id="cy"></div>
-
+    <div class="container-fluid min-vh-100 p-0">
+      <div class="row min-vh-100 no-gutters">
+        <div class="col-sm-12">
+          <div id="cy"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid fixed-top mt-3">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="input-group">
+            <input id="link-input" type="text" class="form-control" placeholder="Wikipedia article link">
+            <div class="input-group-append">
+              <button class="btn btn-dark" type="button" onclick="AddNode()">Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+        </div>
+      </div>
+    </div>
     <script src="/scripts/cytoscape.min.js"></script>
     <script src="/scripts/visualisation.js"></script>
   </body>
