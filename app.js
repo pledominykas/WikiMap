@@ -1,7 +1,8 @@
 // Node Modules
 const express = require('express');
 const path = require('path');
-var bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
+const graph = require('./graph.js')
 
 
 const app = express();
@@ -28,7 +29,9 @@ app.get('/scripts/cytoscape.min.js', function(req, res){
   res.sendFile(path.join(__dirname, 'node_modules', 'cytoscape', 'dist', 'cytoscape.min.js'));
 });
 
+// Post request handling
 app.post('/add-node-click', function(req, res){
-    console.log('Got body:', req.body.link);
-    res.sendStatus(200);
+    graph.AddNode(req.body.url, function(nodeName) {
+      res.status(200).send(nodeName);
+    });
 });

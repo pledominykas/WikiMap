@@ -64,8 +64,12 @@ let cy = cytoscape({
 const linkInput = document.getElementById('link-input');
 
 function AddNode() {
-  let link = linkInput.value;
-  $.post("/add-node-click", {link: link}, function(data, status){
-
+  let url = linkInput.value;
+  $.post("/add-node-click", {url: url}, function(data, status){
+    cy.add({
+      group: 'nodes',
+      data: { id: data },
+      position: { x: 200, y: 200 }
+    });
   });
 }
