@@ -35,6 +35,7 @@ function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   return filtered;
 }
 
+// Gets the name of the wikipedia artcile
 function GetWikiArticleName(html){
   const $ = cheerio.load(html);
   let articleName = $('#firstHeading').text();
@@ -47,8 +48,14 @@ function IsWikiArticle(link) {
 }
 
 // Module exports
-module.exports = function(url, onlyFirstParagraph, callback){
+module.exports.GetHyperlinks = function(url, onlyFirstParagraph, callback){
   GetWikiHtml(url, function(html){
-    callback({name: GetWikiArticleName(html), links:GetValidWikiHyperlinks(html, onlyFirstParagraph)});
+    callback(GetValidWikiHyperlinks(html, onlyFirstParagraph));
+  });
+}
+
+module.exports.GetArticleName = function(url, callback) {
+  GetWikiHtml(url, function(html){
+    callback(GetWikiArticleName(html));
   });
 }
