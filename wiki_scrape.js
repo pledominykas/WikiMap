@@ -2,33 +2,29 @@
 const request = require('request');
 const cheerio = require('cheerio');
 
-
 //// TODO: Add error handling
 // Gets the html of a wikipedia article
-function GetWikiHtml(url, onlyFirstParagraph, callback){
+function GetWikiHtml(url, callback){
   request(url, function(err, res, html){
     if(!err && res.statusCode == 200){
-      const $ = cheerio.load(html);
-      html = $('.mw-parser-output');
-
-      if(onlyFirstParagraph){
-        html.children('p').each(function(index, element){
-          if($(element).attr('class') == '' || $(element).attr('class') == undefined){ // selects the first paragraph without any classes
-            html = $(element);
-            return false; // breaks out of the each() loop
-          }
-        });
-      }
-
-      callback(html.html());
+      callback(html);
     }
   });
 }
 
 // Gets all valid unique wikipedia article links from a html string
-function GetValidWikiHyperlinks(html){
+function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   const $ = cheerio.load(html);
-  let hyperlinks = $('a');
+  html = $('.mw-parser-output');
+  if(onlyFirstParagraph){
+    html.children('p').each(function(index, element){
+      if($(element).attr('class') == '' || $(element).attr('class') == undefined){ // selects the first paragraph without any classes
+        html = $(element);
+        return false; // breaks out of the each() loop
+      }
+    });
+  }
+  let hyperlinks = html.find('a');
   let filtered = [];
   for (var i = 0; i < hyperlinks.length; i++) {
     let link = hyperlinks[i].attribs.href;
@@ -39,6 +35,12 @@ function GetValidWikiHyperlinks(html){
   return filtered;
 }
 
+function GetWikiArticleName(html){
+  const $ = cheerio.load(html);
+  let articleName = $('#firstHeading').text();
+  return articleName;
+}
+
 // Checks if the specified link is a valid wikipedia article
 function IsWikiArticle(link) {
   return link.startsWith('/wiki/') && !link.includes(':');
@@ -46,7 +48,7 @@ function IsWikiArticle(link) {
 
 // Module exports
 module.exports = function(url, onlyFirstParagraph, callback){
-  GetWikiHtml(url, onlyFirstParagraph, function(html){
-    callback(GetValidWikiHyperlinks(html));
+  GetWikiHtml(url, function(html){
+    callback({name: GetWikiArticleName(html), links:GetValidWikiHyperlinks(html, onlyFirstParagraph)});
   });
 }
