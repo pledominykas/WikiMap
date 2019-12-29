@@ -61,15 +61,49 @@ let cy = cytoscape({
 
 });
 
-const linkInput = document.getElementById('link-input');
+// Set up node on tap listener
+cy.on('tap', 'node', function(evt){
+  ExpandNode(evt.target);
+});
 
-function AddNode() {
+const linkInput = document.getElementById('link-input');
+const onlyFirstParagraphCheck = document.getElementById('onlyFirstParagraph-checkbox');
+
+function AddNodeClick() {
   let url = linkInput.value;
   $.post("/add-node-click", {url: url}, function(data, status){
-    cy.add({
-      group: 'nodes',
-      data: { id: data },
-      position: { x: 200, y: 200 }
-    });
+    AddNode(url);
   });
+}
+
+// Function for adding nodes to the graph
+function AddNode(url){
+  return cy.add({
+    group: 'nodes',
+    data: { id: ParseNameFromUrl(url), url: url },
+    position: { x: 200, y: 300 }
+  });
+}
+
+function AddEdge(from, to){
+  cy.add({
+    group: 'edges',
+    data: { id: from.id() + '-' + to.id(), source: from.id(), target: to.id() }
+   });
+}
+
+// Function for expanding nodes in the graph
+function ExpandNode(node){
+  $.post("/expand-node-click", {url: node.data().url, onlyFirstParagraph: onlyFirstParagraphCheck.checked}, function(data, status){
+    nodes = JSON.parse(data);
+    for(let childNode of nodes){
+      AddEdge(node, AddNode(childNode));
+    }
+  });
+}
+
+// Function for parsing the wiki article name from the url
+function ParseNameFromUrl(url){
+  let parts = url.split('/');
+  return parts[parts.length-1].replace(/_/g, ' ');
 }
