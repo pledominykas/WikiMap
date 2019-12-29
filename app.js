@@ -29,6 +29,10 @@ app.get('/scripts/cytoscape.min.js', function(req, res){
   res.sendFile(path.join(__dirname, 'node_modules', 'cytoscape', 'dist', 'cytoscape.min.js'));
 });
 
+app.get('/scripts/cytoscape-cola.js', function(req, res){
+  res.sendFile(path.join(__dirname, 'node_modules', 'cytoscape-cola', 'cytoscape-cola.js'));
+});
+
 // Post request handling
 app.post('/add-node-click', function(req, res){
     graph.AddNode(req.body.url, function(nodeName) {
@@ -37,7 +41,7 @@ app.post('/add-node-click', function(req, res){
 });
 
 app.post('/expand-node-click', function(req, res){
-    graph.ExpandNode(req.body.url, req.body.onlyFirstParagraph, function(hyperlinks) {
+    graph.ExpandNode(req.body.url, (req.body.onlyFirstParagraph == 'true'), function(hyperlinks) {
       res.status(200).send(JSON.stringify(hyperlinks));
     });
 });

@@ -52,18 +52,21 @@ let cy = cytoscape({
         'target-arrow-color': 'black',
         'source-arrow-color': 'black',
         'text-outline-color': 'black'
-      }),
-
-  layout: {
-    name: 'grid',
-    rows: 1
-  }
-
+      })
 });
+
+let layoutProperties = {
+  name: 'cola',
+  animate: true,
+  randomize: false,
+  fit: false,
+  infinite: true
+};
 
 // Set up node on tap listener
 cy.on('tap', 'node', function(evt){
   ExpandNode(evt.target);
+  console.log(evt.target.data().url);
 });
 
 const linkInput = document.getElementById('link-input');
@@ -76,20 +79,31 @@ function AddNodeClick() {
   });
 }
 
+// TODO: Add error handling
 // Function for adding nodes to the graph
 function AddNode(url){
-  return cy.add({
-    group: 'nodes',
-    data: { id: ParseNameFromUrl(url), url: url },
-    position: { x: 200, y: 300 }
-  });
+  let node;
+  try{
+    node = cy.add({
+      group: 'nodes',
+      data: { id: ParseNameFromUrl(url), url: url },
+      position: { x: 200, y: 300 },
+    });
+  }
+  catch(err){}
+  return node;
 }
 
+// TODO: Add error handling
+// Function for adding edges to the graph
 function AddEdge(from, to){
-  cy.add({
-    group: 'edges',
-    data: { id: from.id() + '-' + to.id(), source: from.id(), target: to.id() }
-   });
+  try{
+    cy.add({
+      group: 'edges',
+      data: { id: from.id() + '-' + to.id(), source: from.id(), target: to.id(), label: '' }
+     });
+  }
+  catch(err){}
 }
 
 // Function for expanding nodes in the graph
@@ -99,6 +113,7 @@ function ExpandNode(node){
     for(let childNode of nodes){
       AddEdge(node, AddNode(childNode));
     }
+    cy.layout(layoutProperties).run();
   });
 }
 

@@ -20,7 +20,6 @@ module.exports.AddNode = function(url, callback){
   AddNode(url, callback);
 }
 
-module.exports.ExpandNode = function(url, onlyFirstParagraph,callback){
-  console.log(onlyFirstParagraph);
+module.exports.ExpandNode = function(url, onlyFirstParagraph, callback){
   ExpandNode(url, onlyFirstParagraph, callback);
 }

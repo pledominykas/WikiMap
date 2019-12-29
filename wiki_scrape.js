@@ -1,6 +1,7 @@
 // Node Modules
 const request = require('request');
 const cheerio = require('cheerio');
+const wikipediaOriginUrl = 'https://en.wikipedia.org';
 
 //// TODO: Add error handling
 // Gets the html of a wikipedia article
@@ -29,7 +30,7 @@ function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   for (var i = 0; i < hyperlinks.length; i++) {
     let link = hyperlinks[i].attribs.href;
     if(link != undefined && IsWikiArticle(link) && !filtered.includes(link)) {
-      filtered.push(link);
+      filtered.push(wikipediaOriginUrl+link);
     }
   }
   return filtered;
