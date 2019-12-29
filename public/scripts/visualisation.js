@@ -7,7 +7,7 @@ let cy = cytoscape({
       selector: 'node',
       style: {
         'background-color': '#69e',
-        'label': 'data(id)',
+        'label': 'data(name)'
       }
     },
 
@@ -23,36 +23,7 @@ let cy = cytoscape({
         'color': '#777'
       }
     }
-  ],
-
-  style: cytoscape.stylesheet()
-  .selector('edge')
-      .css({
-        'width': 3,
-        'line-color': '#369',
-        'target-arrow-color': '#369',
-        'target-arrow-shape': 'triangle',
-        'label': 'data(label)',
-        'font-size': '14px',
-        'color': '#777'
-      })
-    .selector('node')
-      .css({
-        'content': 'data(id)',
-        'text-valign': 'center',
-        'color': 'white',
-        'text-outline-width': 2,
-        'text-outline-color': '#888',
-        'background-color': '#888'
-      })
-    .selector(':selected')
-      .css({
-        'background-color': 'black',
-        'line-color': 'black',
-        'target-arrow-color': 'black',
-        'source-arrow-color': 'black',
-        'text-outline-color': 'black'
-      })
+  ]
 });
 
 let layoutProperties = {
@@ -66,7 +37,6 @@ let layoutProperties = {
 // Set up node on tap listener
 cy.on('tap', 'node', function(evt){
   ExpandNode(evt.target);
-  console.log(evt.target.data().url);
 });
 
 const linkInput = document.getElementById('link-input');
@@ -83,14 +53,17 @@ function AddNodeClick() {
 // Function for adding nodes to the graph
 function AddNode(url){
   let node;
-  try{
+  let nodeId = ParseIdFromUrl(url);
+  if(cy.$('#'+nodeId).length === 0){
     node = cy.add({
       group: 'nodes',
-      data: { id: ParseNameFromUrl(url), url: url },
-      position: { x: 200, y: 300 },
+      data: { id: nodeId, url: url, name: ParseNameFromUrl(url) },
+      position: { x: 200, y: 300 }
     });
   }
-  catch(err){}
+  else{
+    return cy.$('#'+nodeId)[0];
+  }
   return node;
 }
 
@@ -111,6 +84,7 @@ function ExpandNode(node){
   $.post("/expand-node-click", {url: node.data().url, onlyFirstParagraph: onlyFirstParagraphCheck.checked}, function(data, status){
     nodes = JSON.parse(data);
     for(let childNode of nodes){
+
       AddEdge(node, AddNode(childNode));
     }
     cy.layout(layoutProperties).run();
@@ -121,4 +95,9 @@ function ExpandNode(node){
 function ParseNameFromUrl(url){
   let parts = url.split('/');
   return parts[parts.length-1].replace(/_/g, ' ');
+}
+
+function ParseIdFromUrl(url){
+  let parts = url.split('/');
+  return parts[parts.length-1];
 }
