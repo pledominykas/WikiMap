@@ -16,9 +16,9 @@ function GetWikiHtml(url, callback){
 function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   const $ = cheerio.load(html);
   html = $('.mw-parser-output');
-  if(onlyFirstParagraph){
+  if(onlyFirstParagraph === true){
     html.children('p').each(function(index, element){
-      if($(element).attr('class') == '' || $(element).attr('class') == undefined){ // selects the first paragraph without any classes
+      if(($(element).attr('class') == '' || $(element).attr('class') == undefined) && $(element).find('#coordinates').length == 0){ // selects the first paragraph without any classes and ignores the coordinates paragraph
         html = $(element);
         return false; // breaks out of the each() loop
       }
