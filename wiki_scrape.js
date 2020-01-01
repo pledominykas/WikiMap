@@ -19,7 +19,7 @@ function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   html = $('.mw-parser-output');
   if(onlyFirstParagraph === true){
     html.children('p').each(function(index, element){
-      if(($(element).attr('class') == '' || $(element).attr('class') == undefined) && $(element).find('#coordinates').length == 0){ // selects the first paragraph without any classes and ignores the coordinates paragraph
+      if(($(element).attr('class') == '' || $(element).attr('class') == undefined) && $(element).find('#coordinates').length == 0 && $(element).find('.mw-kartographer-map').length == 0){ // selects the first paragraph without any classes and ignores the coordinates paragraph
         html = $(element);
         return false; // breaks out of the each() loop
       }
