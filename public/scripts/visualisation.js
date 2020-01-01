@@ -84,7 +84,6 @@ function ExpandNode(node){
   $.post("/expand-node-click", {url: node.data().url, onlyFirstParagraph: onlyFirstParagraphCheck.checked}, function(data, status){
     nodes = JSON.parse(data);
     for(let childNode of nodes){
-
       AddEdge(node, AddNode(childNode));
     }
     cy.layout(layoutProperties).run();
@@ -94,10 +93,10 @@ function ExpandNode(node){
 // Function for parsing the wiki article name from the url
 function ParseNameFromUrl(url){
   let parts = url.split('/');
-  return parts[parts.length-1].replace(/_/g, ' ');
+  return decodeURIComponent(parts[parts.length-1].replace(/_/g, ' '));
 }
 
 function ParseIdFromUrl(url){
   let parts = url.split('/');
-  return parts[parts.length-1];
+  return parts[parts.length-1].match(/[a-zA-Z]/g).join('');
 }
