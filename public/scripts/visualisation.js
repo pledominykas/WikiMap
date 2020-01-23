@@ -43,10 +43,7 @@ const linkInput = document.getElementById('link-input');
 const onlyFirstParagraphCheck = document.getElementById('onlyFirstParagraph-checkbox');
 
 function AddNodeClick() {
-  let url = linkInput.value;
-  $.post("/add-node-click", {url: url}, function(data, status){
-    AddNode(url);
-  });
+  AddNode(linkInput.value);
 }
 
 // TODO: Add error handling

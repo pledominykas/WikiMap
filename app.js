@@ -34,14 +34,8 @@ app.get('/scripts/cytoscape-cola.js', function(req, res){
 });
 
 // Post request handling
-app.post('/add-node-click', function(req, res){
-    graph.AddNode(req.body.url, function(nodeName) {
-      res.status(200).send(nodeName);
-    });
-});
-
 app.post('/expand-node-click', function(req, res){
-    graph.ExpandNode(req.body.url, (req.body.onlyFirstParagraph == 'true'), function(hyperlinks) {
-      res.status(200).send(JSON.stringify(hyperlinks));
-    });
+  graph.ExpandNode(req.body.url, (req.body.onlyFirstParagraph == 'true')).then((hyperlinks) => {
+    res.status(200).send(JSON.stringify(hyperlinks));
+  });
 });
