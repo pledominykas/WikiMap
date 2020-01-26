@@ -31,10 +31,12 @@ function GetValidWikiHyperlinks(html, onlyFirstParagraph){
   let filtered = [];
   for (var i = 0; i < hyperlinks.length; i++) {
     let link = hyperlinks[i].attribs.href;
-    if(link != undefined && IsWikiArticle(link) && !filtered.includes(link)) {
-      filtered.push(wikipediaOriginUrl+link);
+    let fullLink = wikipediaOriginUrl+link;
+    if(link != undefined && IsWikiArticle(link) && !filtered.includes(fullLink)) {
+      filtered.push(fullLink);
     }
   }
+
   return filtered;
 }
 
