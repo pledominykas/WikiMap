@@ -28,3 +28,4 @@ npm run dev
  - [ ] Color nodes dependant on their category
  - [ ] Resize nodes dependant on hyperlink count
  - [ ] Add different graph layout options
+ - [ ] Integrate wikipedia article search
